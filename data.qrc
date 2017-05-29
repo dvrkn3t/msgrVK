@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/data">
+        <file>circle-loader.gif</file>
+    </qresource>
+</RCC>
