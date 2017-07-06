@@ -18,7 +18,6 @@ protected:
 public:
     Manager(std::shared_ptr<QNetworkAccessManager> ptr);
     std::shared_ptr<QNetworkAccessManager> networkManager;
-
     /*void loadImage(QString link) {
         auto imageReply = makeHTTPRequest(link);
         connect(imageReply, &QNetworkReply::finished, this, [this, imageReply]() mutable {

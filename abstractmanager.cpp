@@ -14,3 +14,5 @@ Manager::Manager(std::shared_ptr<QNetworkAccessManager> ptr) : networkManager(pt
     auto temp = latinString.data();
     for(int i = 0; i < latinString.size(); i++) _token += temp[i] ^ 1;
 }
+
+

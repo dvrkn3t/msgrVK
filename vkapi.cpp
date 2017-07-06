@@ -41,7 +41,6 @@ VKSmartData<std::pair<vktype::user, vktype::message>> VKAPI::getDialogs() {
                 disconnect(&Users, &UserManager::usersQueryReady, this, 0);
                 return;
             }
-
             auto position = finder->second;
             auto user = Users.findUser(uid);
             dialogsData.changeFirst(user, position);

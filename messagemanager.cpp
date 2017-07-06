@@ -19,7 +19,12 @@ void MessageManager::getDialogs() {
     auto reply = makeHTTPRequest("https://api.vk.com/method/messages.getDialogs?count=40&access_token=" + _token + "&offset=" + QString::number(offset));
     connect(reply, &QNetworkReply::finished, this, [this, reply]() mutable {
         reply->deleteLater();
-        auto responseArray = QJsonDocument::fromJson(reply->readAll()).object()["response"].toArray();
+        auto response = reply->readAll();
+        if(response.contains("error")) {
+            disconnect(reply, &QNetworkReply::finished, this, 0);
+            return;
+        }
+        auto responseArray = QJsonDocument::fromJson(response).object()["response"].toArray();
         responseArray.removeFirst();
         for(const auto& value : responseArray) {
             auto messageObject = messageFromJson(value.toObject());

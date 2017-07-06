@@ -62,7 +62,12 @@ void UserManager::get(std::vector<int> uids) {
     auto reply = makeHTTPRequest(str);
     connect(reply, &QNetworkReply::finished, this, [this, reply]() mutable {
         reply->deleteLater();
-        auto responseArray = QJsonDocument::fromJson(reply->readAll()).object()["response"].toArray();
+        auto response = reply->readAll();
+        if(response.contains("error")) {
+            disconnect(reply, &QNetworkReply::finished, this, 0);
+            return;
+        }
+        auto responseArray = QJsonDocument::fromJson(response).object()["response"].toArray();
         for(const auto& value : responseArray) {
             auto user = userFromJson(value.toObject());
             addToCache(user);
@@ -85,7 +90,12 @@ void UserManager::loadMe(vktype::user& _me) const {
     auto reply = makeHTTPRequest("https://api.vk.com/method/users.get?fields=photo_100&access_token=" + _token);
     connect(reply, &QNetworkReply::finished, this, [this, reply, &_me]() {
         reply->deleteLater();
-        auto responseArray = QJsonDocument::fromJson(reply->readAll()).object()["response"].toArray();
+        auto response = reply->readAll();
+        if(response.contains("error")) {
+            disconnect(reply, &QNetworkReply::finished, this, 0);
+            return;
+        }
+        auto responseArray = QJsonDocument::fromJson(response).object()["response"].toArray();
         auto user = userFromJson(responseArray[0].toObject());
         _me = user;
         auto imageReply = makeHTTPRequest(user.photo_100);
